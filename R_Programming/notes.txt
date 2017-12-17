@@ -1,0 +1,37 @@
+for (i in letters){print(i)}
+
+if (condition){
+	do_something
+} else if (condition) {
+	 do_another_thing
+}else{
+	get_cooking
+}
+
+
+
+repeat {
+	something_to_repeat
+	#needs a break condition or will loop forever
+}
+
+
+break keyword = end loop.
+
+next keyword = continue or pass in other languages.
+
+return keywoard ends loop and returns a value.
+
+as.POSIXlt
+as.POSIXct
+as.Date
+
+
+ x <- read.csv(i, header = T)
+    if (sum(Complete.cases(x)) > threshold){
+      n.vect = c(n.vect, cor(x, na.rm = T))
+    }
+  }
+  colnames(n.df) <- c('id', 'noobs')
+  return(n.vect)
+}
