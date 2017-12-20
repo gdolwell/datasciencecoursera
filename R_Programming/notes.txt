@@ -60,5 +60,37 @@ tapply(mtcars$mpg, mtcars$cyl, mean)
 	Professor of Biostatistics
 	University of Auckland
 
+rnorm generates random Normal variates give mu and sd
+
+dnorm evaluate the Normal probability density, with give mu and sd, at a point
+
+pnorm evaluate the sumulative distribution function for a Normal distribution
+
+rpois generate random Poisson variate with a given lambda
+
+(d, r, p, q):(denisty, random generation, cumulative, quantile)
+
+
+normal y = b0 + b1x + e
+set.seed(1)
+x <- rnorm(100)
+e <- rnorm(100, 0, 2)
+y <- 0.5 + 2*x +e
+summary(y)
+plot(x, y)
+
+poisson
+log mu = b0 + b1x
+x <- rnorm(100)
+log.mu <- 0.5 + 0.3*x
+y <- rpois(100, exp(log.mu))
+summary(y)
+plot(x, y)
+
+sample(some_vector, number_of_objects, replace = F)
+
+system.time(some_expression) #returns time in seconds to evaluate
+
+
 
 

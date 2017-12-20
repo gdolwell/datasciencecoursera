@@ -24,13 +24,16 @@ hist(outcome[ , 11])
 names(outcome)
 
 
-best <- function(state, outcome) {
-  if(state %in% outcome_of_care$State ){
-     
+best <- function(state = "all", outcome, rank = 1) {
+  # verify state is correct format
+  if(state %in% outcome_of_care$State || state == "all"){
+     # do nothing
   } else {
     return(print("State not found, use two letter abbreviation, ie:
                  AZ."))
   }
+  
+  # verify condition is correct format
   if(outcome == "heart attack"){
     n <- 11
   } else if (outcome == "heart failure"){
@@ -41,18 +44,56 @@ best <- function(state, outcome) {
     return("Print Invalid outcome, options: heart attack, heart failure
            pneumonia.")
   }
-  print("State and condition are valid")
   
+  #verify rank is in scope, or a valid input
+  if(max(rank) > nrow(outcome_of_care) & rank != "worst"){
+    return("Rank out of scope.")
+  }
+  
+  # return argument acceptance
+  #print("State and condition are valid")
+  
+  # get slice of outcome_of_care according to state input
   state_slice <- outcome_of_care[outcome_of_care$State == state, ]
-  sorted <- state_slice[order(as.numeric(state_slice[, n])), ]
-  print(sorted[1, 2])
-  #min_mort_hospital <- sort(state_slice[min(as.numeric(state_slice[,n])), 2])
-  #return(min_mort_hospital[])
+  
+  # get rid of coecion warning by changing Not Available to NA
+  state_slice[,n] <- gsub("Not Available", NA, state_slice[, n])
+  
+  # sort slice as numerice by outcome column, then by name
+  if(rank == "worst"){
+    sorted <- state_slice[order(c(as.numeric(state_slice[, n])), state_slice[2],
+                                decreasing = T, na.last = T), ]
+    rank <- 1
+  } else {
+    sorted <- state_slice[order(c(as.numeric(state_slice[, n])), state_slice[2]), ]
+  }
+  #return winner
+  return(sorted[rank, 2])
+   
 }
 
 
+rankall <- function(outcome, number){
+  state_names <- sort(unique(outcome_of_care$State))
+  winners.df <- data.frame(nrow = length(state_names), ncol = 2)
+  i = 0
+  for (state_name in state_names){
+    winners.df[i, 1] <- state_name
+    winners.df[i, 2] <- best(state_name, outcome, number)
+    i <- i + 1
+  }
+  colnames(winners.df)[1:2] <- c("State", "Hospital")
+  return(winners.df)
+}
+
+
+
 #best('AZ' , "heart attack")
-best("TX", "heart attack")
-best("TX", "heart failure")
-best("MD", "heart attack")
+best("TX", "heart attack", "worst")
+best("TX", "heart failure", 1:5)
+best("MD", "heart attack", "worst")
 best("MD", "pneumonia")
+
+rankall("heart attack", 20)
+tail(rankall("pneumonia", "worst"), 3)
+best("GU", "pneumonia", "worst")
